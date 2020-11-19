@@ -6,12 +6,23 @@ import GameObject.Rectangle;
 import GameObject.SpriteSheet;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import Enemies.FriendlyFire;
 
 // This class is a base class for all enemies in the game -- all enemies should extend from it
 public class Enemy extends MapEntity {
+	
+	//Sound Effects
+	File vaporizedSound = new File("Resources/forceFieldSound.wav");
 
 	protected MapEntityStatus status;
 
@@ -61,6 +72,7 @@ public class Enemy extends MapEntity {
 			touchedPlayer(player);
 		} else if (player.currentFireball != null) {
 			if (intersects(player.getFire())) {
+				makeSound(vaporizedSound);
 				this.setMapEntityStatus(MapEntityStatus.REMOVED);
 			}
 		}

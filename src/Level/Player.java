@@ -10,7 +10,15 @@ import Utils.AirGroundState;
 import Utils.Direction;
 import Utils.Point;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import Enemies.Fireball;
 import Enemies.FriendlyFire;
@@ -58,6 +66,10 @@ public abstract class Player extends GameObject {
 	// if true, player cannot be hurt by enemies (good for testing)
 	protected boolean isInvincible = false;
 	protected boolean hasPowerUp = false;
+
+	// Sound Effects
+	File bubbleSound = new File("Resources/bubbles.wav");
+	File powerUp = new File("Resources/powerUp.wav");
 
 	public Player(SpriteSheet spriteSheet, float x, float y, String startingAnimationName) {
 		super(spriteSheet, x, y, startingAnimationName);
@@ -327,8 +339,8 @@ public abstract class Player extends GameObject {
 			if (moveAmountY > 0) {
 				increaseMomentum();
 			}
-			
-			if(y > 700) {
+
+			if (y > 700) {
 				levelState = LevelState.PLAYER_DEAD;
 			}
 		}
@@ -355,40 +367,39 @@ public abstract class Player extends GameObject {
 			if (previousPlayerState == PlayerState.WALKING || previousPlayerState == PlayerState.STANDING) {
 				currentAnimationName = facingDirection == Direction.RIGHT ? "SHOOT_RIGHT" : "SHOOT_LEFT";
 			} else {
-				
-					// define where fireball will spawn on map (x location) relative to player's
-					// location
-					// and define its movement speed
-					int fireballX;
-					float movementSpeed;
-					if (facingDirection == Direction.RIGHT) {
-						fireballX = Math.round(getX()) - 8 + getScaledWidth();
-						movementSpeed = 1.5f;
-					} else {
-						fireballX = Math.round(getX()) - 8;
-						movementSpeed = -1.5f;
-					}
 
-					// define where fireball will spawn on the map (y location) relative to dinosaur
-					// enemy's location
-					int fireballY = Math.round(getY()) + 15;
+				// define where fireball will spawn on map (x location) relative to player's
+				// location
+				// and define its movement speed
+				int fireballX;
+				float movementSpeed;
+				if (facingDirection == Direction.RIGHT) {
+					fireballX = Math.round(getX()) - 8 + getScaledWidth();
+					movementSpeed = 1.5f;
+				} else {
+					fireballX = Math.round(getX()) - 8;
+					movementSpeed = -1.5f;
+				}
 
-					// create Fireball
-					FriendlyFire fireball = new FriendlyFire(new Point(fireballX, fireballY), movementSpeed, 1000);
-					currentFireball = fireball;
+				// define where fireball will spawn on the map (y location) relative to dinosaur
+				// enemy's location
+				int fireballY = Math.round(getY()) + 15;
 
-					// add fireball enemy to the map for it to offically spawn in the level
-					if (hasPowerUp == true) {
+				// create Fireball
+				FriendlyFire fireball = new FriendlyFire(new Point(fireballX, fireballY), movementSpeed, 1000);
+				currentFireball = fireball;
+
+				// add fireball enemy to the map for it to offically spawn in the level
+				if (hasPowerUp == true) {
 					map.addEnemy(fireball);
-					}
-					// change dinosaur back to its WALK state after shooting, reset shootTimer to
-					// wait another 2 seconds before shooting again
-					playerState = PlayerState.WALKING;
-				} 
-				previousPlayerState = playerState;
+				}
+				// change dinosaur back to its WALK state after shooting, reset shootTimer to
+				// wait another 2 seconds before shooting again
+				playerState = PlayerState.WALKING;
 			}
+			previousPlayerState = playerState;
 		}
-	
+	}
 
 	protected void updateLockedKeys() {
 		if (Keyboard.isKeyUp(JUMP_KEY) || Keyboard.isKeyUp(JUMP_ALT)) {
@@ -440,7 +451,7 @@ public abstract class Player extends GameObject {
 			} else if (mapEntity instanceof MapTile) {
 				MapTile mapTile = (MapTile) mapEntity;
 				if (mapTile.getTileType() == TileType.KILLER) {
-					levelState = LevelState.PLAYER_DEAD;
+					makeSound(bubbleSound);
 				}
 			}
 		}
@@ -451,6 +462,7 @@ public abstract class Player extends GameObject {
 			MapTile mapTile = (MapTile) mapEntity;
 			if (mapTile.getTileType() == TileType.POWER_UP) {
 				hasPowerUp = true;
+				makeSound(powerUp);
 			}
 		}
 	}
@@ -548,4 +560,5 @@ public abstract class Player extends GameObject {
 	public IntersectableRectangle getFire() {
 		return currentFireball.getBounds();
 	}
+
 }

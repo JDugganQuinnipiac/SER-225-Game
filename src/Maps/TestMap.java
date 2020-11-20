@@ -58,8 +58,6 @@ public class TestMap extends Map {
         	enemies.add(new BugEnemy(getPositionByTileIndex(7, 10), Direction.LEFT));
         	return enemies;
         } else if (mapFileName == "test_map_5.txt"){
-        	enemies.add(new BugEnemy(getPositionByTileIndex(14, 11), Direction.LEFT));
-        	enemies.add(new BugEnemy(getPositionByTileIndex(20, 11), Direction.LEFT));
         	return enemies;
         }  else {
         	return enemies;
@@ -170,8 +168,8 @@ public class TestMap extends Map {
             ));
             enhancedMapTiles.add(new HorizontalMovingPlatform(
                     ImageLoader.load("GreenPlatform.png"),
-                    getPositionByTileIndex(15, 10),
-                    getPositionByTileIndex(19, 10),
+                    getPositionByTileIndex(14, 10),
+                    getPositionByTileIndex(20, 10),
                     TileType.NOT_PASSABLE,
                     3,
                     new Rectangle(0, 6,16,4),
@@ -188,7 +186,7 @@ public class TestMap extends Map {
             ));
             enhancedMapTiles.add(new HorizontalMovingPlatform(
                     ImageLoader.load("GreenPlatform.png"),
-                    getPositionByTileIndex(25, 10),
+                    getPositionByTileIndex(24, 10),
                     getPositionByTileIndex(29, 10),
                     TileType.NOT_PASSABLE,
                     3,
@@ -215,7 +213,7 @@ public class TestMap extends Map {
             ));
             enhancedMapTiles.add(new HorizontalMovingPlatform(
                     ImageLoader.load("GreenPlatform.png"),
-                    getPositionByTileIndex(42, 10),
+                    getPositionByTileIndex(41, 10),
                     getPositionByTileIndex(48, 10),
                     TileType.NOT_PASSABLE,
                     3,
